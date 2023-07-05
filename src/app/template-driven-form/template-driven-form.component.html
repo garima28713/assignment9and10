@@ -1,61 +1,146 @@
-<form #signupForm="ngForm" (ngSubmit)="onSubmit(signupForm)">
+<form
+  #signupForm="ngForm"
+  (ngSubmit)="signupForm.form.valid && onSubmit(signupForm)"
+  [appMatchPassword]="['password', 'confirmPassword']"
+  novalidate
+>
   <div class="form-group">
     <label for="username">Full Name</label>
     <input
-    name="fullName"
-      type="email" ngModel
+      name="fullName"
+      type="text"
+      ngModel
+      #fullname="ngModel"
       class="form-control"
       id="username"
       placeholder="Enter full name"
+      required
     />
+    <span
+      class="text-danger"
+      *ngIf="
+        (fullname.touched || signupForm.submitted) && fullname.errors?.['required']
+      "
+    >
+      Name is required
+    </span>
   </div>
   <div class="form-group">
     <label for="exampleInputEmail1">Email address</label>
     <input
-    name="email"
-      type="email" ngModel
+      name="email"
+      type="email"
+      ngModel
       class="form-control"
       id="exampleInputEmail1"
       aria-describedby="emailHelp"
       placeholder="Enter email"
+      #email="ngModel"
+      required
+      email
     />
+    <span
+      class="text-danger"
+      *ngIf="(email.touched || signupForm.submitted) && email.errors?.['required']"
+    >
+      Email is required
+    </span>
+    <span class="text-danger" *ngIf="email.touched && email.errors?.['email']">
+      Enter a valid email address
+    </span>
   </div>
   <div class="form-group">
     <label for="phoneNo">Phone No.</label>
     <input
-    name="phoneNo"
-      type="text" ngModel
+      name="phoneNo"
+      type="text"
+      ngModel
       class="form-control"
       id="phoneNo"
       aria-describedby="phone"
       placeholder="Enter mobile no"
-    />
+      #phoneNo="ngModel"
+      required
+      minlength="10"
+      />
+      <span
+        class="text-danger"
+        *ngIf="
+          (phoneNo.touched || signupForm.submitted) && phoneNo.errors?.['minlength']
+        "
+      >
+        Phone no should be of 10 digits
+      </span>
   </div>
-  <div class="form-group">
-    <label for="pwd">Password</label>
-    <input
-    name="password"
-      type="password" ngModel
-      class="form-control"
-      id="pwd"
-      placeholder="Password"
-    />
-  </div>
-  <div class="form-group">
-    <label for="confirmPwd">Confirm Password</label>
-    <input
-    name="confirmPwd"
-      type="password" ngModel
-      class="form-control"
-      id="confirmPwd"
-      placeholder="Password"
-    />
-  </div>
+    <div class="form-group">
+      <label for="pwd">Password</label>
+      <input
+        name="password"
+        type="password"
+        ngModel
+        class="form-control"
+        id="pwd"
+        placeholder="Password"
+        #password="ngModel"
+        required
+      />
+      <span
+        class="text-danger"
+        *ngIf="
+          (password.touched || signupForm.submitted) && password.errors?.['required']
+        "
+      >
+        Password is required
+      </span>
+      <span
+        class="text-danger"
+        *ngIf="password.touched && 
+        password.errors?.['invalidPassword']"
+      >
+        Password should have minimum 8 characters, at least 1 uppercase letter,
+        1 lowercase letter and 1 number
+      </span>
+    </div>
+    <div class="form-group">
+      <label for="confirmPwd">Confirm Password</label>
+      <input
+        name="confirmPwd"
+        type="password"
+        ngModel
+        class="form-control"
+        id="confirmPwd"
+        placeholder="Password"
+        #confirmPwd="ngModel"
+        required
+      />
+      <span class="text-danger" *ngIf="confirmPwd.errors?.['required']">
+        Confirm Password is required
+      </span>
+      <span
+        class="text-danger"
+        *ngIf="confirmPwd.errors?.['matching']"
+      >
+        Passwords do not match.
+      </span>
+    </div>
+  
+
   <div class="form-group form-check">
-    <input type="checkbox" name="agreement" class="form-check-input" id="exampleCheck1" ngModel/>
+    <input
+      type="checkbox"
+      name="agreement"
+      class="form-check-input"
+      id="exampleCheck1"
+      ngModel
+      #checkbox="ngModel"
+      required
+    />
     <label class="form-check-label" for="exampleCheck1"
       >Agree with Terms & Conditions</label
     >
+    <span class="text-danger" *ngIf="checkbox.errors?.['required']"
+      >Pls check this checkbox
+    </span>
   </div>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
